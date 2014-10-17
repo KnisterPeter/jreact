@@ -1,87 +1,110 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-		<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-		<parent>
-				<groupId>org.sonatype.oss</groupId>
-				<artifactId>oss-parent</artifactId>
-				<version>7</version>
-		</parent>
-		<groupId>de.matrixweb</groupId>
-		<artifactId>jreact</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  <groupId>de.matrixweb</groupId>
+  <artifactId>jreact</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
 
-		<name>jreact</name>
-		<description>Server-side react.js rendering with java7 or java8</description>
-		<url>https://github.com/KnisterPeter/jreact</url>
+  <name>jreact</name>
+  <description>Server-side react.js rendering with java7 or java8</description>
+  <url>https://github.com/KnisterPeter/jreact</url>
 
-		<licenses>
-				<license>
-						<name>BSD</name>
-						<url>http://www.opensource.org/licenses/bsd-license.php</url>
-						<distribution>repo</distribution>
-				</license>
-		</licenses>
+  <licenses>
+    <license>
+      <name>BSD</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-		<developers>
-				<developer>
-						<name>Markus Wolf</name>
-						<email>mail@markus-wolf.de</email>
-						<url>http://matrixweb.de</url>
-				</developer>
-		</developers>
+  <developers>
+    <developer>
+      <name>Markus Wolf</name>
+      <email>mail@markus-wolf.de</email>
+      <url>http://matrixweb.de</url>
+    </developer>
+  </developers>
 
-		<scm>
-				<connection>scm:git:git@github.com:KnisterPeter/jreact.git</connection>
-				<developerConnection>scm:git:git@github.com:KnisterPeter/jreact.git</developerConnection>
-				<url>https://github.com/KnisterPeter/jreact</url>
-		</scm>
+  <scm>
+    <connection>scm:git:git@github.com:KnisterPeter/jreact.git</connection>
+    <developerConnection>scm:git:git@github.com:KnisterPeter/jreact.git</developerConnection>
+    <url>https://github.com/KnisterPeter/jreact</url>
+  </scm>
 
 
-		<dependencies>
-				<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-databind</artifactId>
-						<version>2.3.1</version>
-				</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.3.1</version>
+    </dependency>
 
-				<dependency>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-						<version>4.11</version>
-						<scope>test</scope>
-				</dependency>
-		</dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-		<build>
-				<plugins>
-						<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-compiler-plugin</artifactId>
-								<version>3.1</version>
-								<configuration>
-										<source>1.7</source>
-										<target>1.7</target>
-								</configuration>
-						</plugin>
-				</plugins>
-		</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-		<profiles>
-				<profile>
-						<id>java8</id>
-						<build>
-								<plugins>
-										<plugin>
-												<groupId>org.apache.maven.plugins</groupId>
-												<artifactId>maven-compiler-plugin</artifactId>
-												<version>3.1</version>
-												<configuration>
-														<source>1.8</source>
-														<target>1.8</target>
-												</configuration>
-										</plugin>
-								</plugins>
-						</build>
-				</profile>
-		</profiles>
+  <profiles>
+    <profile>
+      <id>java8</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.1</version>
+            <configuration>
+              <source>1.8</source>
+              <target>1.8</target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>dynjs</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.dynjs</groupId>
+          <artifactId>dynjs</artifactId>
+          <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+      </dependencies>
+      <repositories>
+        <repository>
+          <id>sonatype-snapshots</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
 </project>
