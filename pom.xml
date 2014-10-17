@@ -8,7 +8,7 @@
   </parent>
   <groupId>de.matrixweb</groupId>
   <artifactId>jreact</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
 
   <name>jreact</name>
   <description>Server-side react.js rendering with java7 or java8</description>
