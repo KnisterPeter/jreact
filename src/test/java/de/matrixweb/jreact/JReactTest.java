@@ -17,14 +17,12 @@ public class JReactTest {
   private JReact setupReact011() {
     JReact react = new JReact();
     react.addRequirePath("./src/test/resources/react-0.11");
-    react.addRequirePath("./src/test/resources/react-0.11/node_modules");
     return react;
   }
 
   private JReact setupReact012() {
     JReact react = new JReact();
     react.addRequirePath("./src/test/resources/react-0.12");
-    react.addRequirePath("./src/test/resources/react-0.12/node_modules");
     return react;
   }
 

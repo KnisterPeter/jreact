@@ -45,7 +45,7 @@ public class JReact {
     this.js = js;
     try {
       this.js.eval(new InputStreamReader(getClass().getResourceAsStream(
-          "/require-impl.js"), "UTF-8"));
+          "/require.js"), "UTF-8"));
       this.js
           .eval("if (typeof process === 'undefined') { process = { env: {} }; }");
       this.js
