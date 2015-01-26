@@ -7,6 +7,14 @@ function isFile(path) {
 function isDirectory(path) {
   return !!(new java.io.File(path)).isDirectory();
 }
+function getDirectory(path) {  
+  if(isDirectory(path))
+     return getFilename(path);
+  return (new java.io.File(path)).getParent();  
+}
+function getFilename(path) {    
+  return (new java.io.File(path)).getName();
+}
 function readFile(path) {
   return '' + new java.util.Scanner(new java.io.File(path), 'UTF-8')
     .useDelimiter('\\Z')
@@ -24,6 +32,9 @@ function loadFromNodeModules(base, id) {
       eval( 'pkg = '+ pkg);
       if (pkg['main']) {
         resolvedPath = path + '/' + pkg['main'];
+        if(isFile(resolvedPath + '.js')) {
+            resolvedPath = resolvedPath + ".js";
+        }
       }
     } else if (isFile(path + '/index.js')) {
       resolvedPath = path + '/index.js';
@@ -66,7 +77,7 @@ require = function(id) {
     }
 
     var content = readFile(uri.uri);
-    var f = new Function('require', 'exports', 'module', (require.transform ? require.transform(content) : content));
+    var f = new Function('require', 'exports', 'module', '__filename','__dirname',  (require.transform ? require.transform(content) : content));
     var exports = {};
     var module = { id: id, uri: uri.uri, exports: exports };
 
@@ -77,7 +88,9 @@ require = function(id) {
       .replace(/^\//, '')
       .replace(/\/$/, '');
     require.stack.unshift(stackPath);
-    f.call({}, require, exports, module);
+    var __dirname = getDirectory(uri.uri);
+    var __filename = getFilename(uri.uri);
+    f.call({}, require, exports, module,__filename,__dirname);
     exports = module.exports || exports;
     require.cache[uri.uri] = exports;
     require.stack.shift();
