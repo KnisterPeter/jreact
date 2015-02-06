@@ -12,6 +12,7 @@ public class ClasspathBasedFilesystem implements Filesystem {
 	}
 	
 	
+	
 	@Override
 	public boolean isFile(String fileName) {
 		URL url = loader.getResource(fileName);
@@ -50,4 +51,8 @@ public class ClasspathBasedFilesystem implements Filesystem {
 		return strings[strings.length-1];
 	}
 
+	@Override
+	public boolean exists(String fileName){
+		return loader.getResource(fileName) != null;
+	}
 }

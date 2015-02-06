@@ -37,4 +37,9 @@ public class FilebasedFilesystem implements Filesystem {
 		return new File(fileBase, path).getName();
 	}
 
+	@Override
+	public boolean exists(String fileName) {
+		return new File(fileName).exists();
+	}
+
 }

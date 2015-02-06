@@ -1,6 +1,6 @@
-//function exists(path) {
-//  return !!(new java.io.File(path)).exists();
-//}
+function exists(path) {
+  return filesystem.exists(path);
+}
 function isFile(path) {
   return filesystem.isFile(path);
 }
@@ -17,20 +17,21 @@ function readFile(path) {
 function loadFromNodeModules(base, id) {
   var path = base + '/' + require.stack[0] + '/node_modules/' + id;
   var resolvedPath;
-
-  if (isFile(path)) {
-    resolvedPath = path;
-  } else if (isFile(path + '/' + 'package.json')) {
-    var pkg = readFile(path + '/' + 'package.json');
-    eval( 'pkg = '+ pkg);
-    if (pkg['main']) {
-      resolvedPath = path + '/' + pkg['main'];
-      if(isFile(resolvedPath + '.js')) {
-          resolvedPath = resolvedPath + ".js";
-      }
-    }
-  } else if (isFile(path + '/index.js')) {
-    resolvedPath = path + '/index.js';
+  if (exists(path)) {
+	  if (isFile(path)) {
+	    resolvedPath = path;
+	  } else if (isFile(path + '/' + 'package.json')) {
+	    var pkg = readFile(path + '/' + 'package.json');
+	    eval( 'pkg = '+ pkg);
+	    if (pkg['main']) {
+	      resolvedPath = path + '/' + pkg['main'];
+	      if(isFile(resolvedPath + '.js')) {
+	          resolvedPath = resolvedPath + ".js";
+	      }
+	    }
+	  } else if (isFile(path + '/index.js')) {
+	    resolvedPath = path + '/index.js';
+	  }
   } else if (isFile(path + '.js')) {
       resolvedPath =  path + '.js';
   }
