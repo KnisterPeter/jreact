@@ -27,22 +27,46 @@ public class JReact {
 
   /**
    * This creates a {@link JReact} instance using the default
-   * {@link ScriptEngine} return for the mime-type 'application/javascript'.
+   * {@link ScriptEngine} return for the mime-type 'application/javascript' and filebased resources.
    */
   public JReact() {
-    this(new ScriptEngineManager()
-        .getEngineByMimeType("application/javascript"));
+	  this(new ScriptEngineManager()
+      .getEngineByMimeType("application/javascript"));
   }
-
+  
+  /**
+   * This creates a {@link JReact} instance using classpath-resources instead of filebased resources.
+   * @param useClasspathResources
+   */
+  public JReact(boolean useClasspathResources) {
+	  this(new ScriptEngineManager()
+      .getEngineByMimeType("application/javascript"), useClasspathResources);
+  }
+  
+  /**
+   * This creates a {@link JReact} instance using the given {@link ScriptEngine} and filebased resources.
+   * 
+   * @param js An instance of {@link ScriptEngine} to use
+   */
+  public JReact(ScriptEngine js) {
+	  this(js, false);
+  }
+  
   /**
    * This creates a {@link JReact} instance using the given {@link ScriptEngine}
    * .
    * 
-   * @param js
-   *          An instance of {@link ScriptEngine} to use
+   * @param js An instance of {@link ScriptEngine} to use
+   * @param useClasspathResources use classpath resources instead of file-resources
    */
-  public JReact(ScriptEngine js) {
+  public JReact(ScriptEngine js, boolean useClasspathResources) {
     this.js = js;
+    
+    if (useClasspathResources)
+    	js.put("filesystem", new ClasspathBasedFilesystem());
+    else
+    	js.put("filesystem", new FilebasedFilesystem());
+    
     try {
       this.js.eval(new InputStreamReader(getClass().getResourceAsStream(
           "/require.js"), "UTF-8"));

@@ -1,46 +1,38 @@
-function exists(path) {
-  return !!(new java.io.File(path)).exists();
-}
+//function exists(path) {
+//  return !!(new java.io.File(path)).exists();
+//}
 function isFile(path) {
-  return !!(new java.io.File(path)).isFile();
-}
-function isDirectory(path) {
-  return !!(new java.io.File(path)).isDirectory();
+  return filesystem.isFile(path);
 }
 function getDirectory(path) {  
-  if(isDirectory(path))
-     return getFilename(path);
-  return (new java.io.File(path)).getParent();  
+  return filesystem.getDirectory(path);  
 }
 function getFilename(path) {    
-  return (new java.io.File(path)).getName();
+  return filesystem.getFilename(path);
 }
 function readFile(path) {
-  return '' + new java.util.Scanner(new java.io.File(path), 'UTF-8')
-    .useDelimiter('\\Z')
-    .next();
+  return filesystem.readFile(path);
 }
 
 function loadFromNodeModules(base, id) {
   var path = base + '/' + require.stack[0] + '/node_modules/' + id;
   var resolvedPath;
-  if (exists(path)) {
-    if (isFile(path)) {
-      resolvedPath = path;
-    } else if (isFile(path + '/' + 'package.json')) {
-      var pkg = readFile(path + '/' + 'package.json');
-      eval( 'pkg = '+ pkg);
-      if (pkg['main']) {
-        resolvedPath = path + '/' + pkg['main'];
-        if(isFile(resolvedPath + '.js')) {
-            resolvedPath = resolvedPath + ".js";
-        }
+
+  if (isFile(path)) {
+    resolvedPath = path;
+  } else if (isFile(path + '/' + 'package.json')) {
+    var pkg = readFile(path + '/' + 'package.json');
+    eval( 'pkg = '+ pkg);
+    if (pkg['main']) {
+      resolvedPath = path + '/' + pkg['main'];
+      if(isFile(resolvedPath + '.js')) {
+          resolvedPath = resolvedPath + ".js";
       }
-    } else if (isFile(path + '/index.js')) {
-      resolvedPath = path + '/index.js';
     }
+  } else if (isFile(path + '/index.js')) {
+    resolvedPath = path + '/index.js';
   } else if (isFile(path + '.js')) {
-    resolvedPath =  path + '.js';
+      resolvedPath =  path + '.js';
   }
   return resolvedPath;
 }
