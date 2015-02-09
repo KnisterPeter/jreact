@@ -1,14 +1,30 @@
 package de.matrixweb.jreact;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * Implements a classpath based {@link Filesystem}.
+ */
 public class ClasspathBasedFilesystem implements Filesystem {
 
-  private ClassLoader loader;
+  private final ClassLoader loader;
 
+  /**
+   *
+   */
   public ClasspathBasedFilesystem() {
     this.loader = getClass().getClassLoader();
+  }
+
+  /**
+   * @param loader
+   *          The {@link ClassLoader} used for file resolving.
+   */
+  public ClasspathBasedFilesystem(final ClassLoader loader) {
+    this.loader = loader;
   }
 
   @Override
@@ -21,14 +37,23 @@ public class ClasspathBasedFilesystem implements Filesystem {
     final String[] strings = url.getPath().split("/");
     final String last = strings[strings.length - 1];
 
-    return last.contains(".") // TODO: not good -> there could be files without
-        // extension, but it should work for now
-        && this.loader.getResourceAsStream(fileName) != null;
+    // TODO: not good -> there could be files without extension, but it should
+    // work for now
+    if (last.contains(".")) {
+      try (InputStream in = this.loader.getResourceAsStream(fileName)) {
+        return in != null;
+      } catch (final IOException e) {
+        // Just ignore closing exeception (we can't do anything)
+      }
+    }
+    return false;
   }
 
   @Override
-  public String readFile(final String path) throws FileNotFoundException {
-    return new java.util.Scanner(this.loader.getResourceAsStream(path), "UTF-8").useDelimiter("\\Z").next().toString();
+  public String readFile(final String path) throws IOException {
+    try (InputStream in = this.loader.getResourceAsStream(path)) {
+      return new java.util.Scanner(in, "UTF-8").useDelimiter("\\Z").next().toString();
+    }
   }
 
   @Override

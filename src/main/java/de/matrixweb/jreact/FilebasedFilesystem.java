@@ -2,10 +2,11 @@ package de.matrixweb.jreact;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class FilebasedFilesystem implements Filesystem {
 
-  private String fileBase;
+  private final String fileBase;
 
   public FilebasedFilesystem() {
     this(".");
@@ -22,7 +23,9 @@ public class FilebasedFilesystem implements Filesystem {
 
   @Override
   public String readFile(final String path) throws FileNotFoundException {
-    return new java.util.Scanner(new java.io.File(this.fileBase, path), "UTF-8").useDelimiter("\\Z").next().toString();
+    try (Scanner scanner = new java.util.Scanner(new java.io.File(this.fileBase, path), "UTF-8")) {
+      return scanner.useDelimiter("\\Z").next().toString();
+    }
   }
 
   @Override
