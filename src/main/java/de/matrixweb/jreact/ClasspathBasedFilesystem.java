@@ -5,54 +5,53 @@ import java.net.URL;
 
 public class ClasspathBasedFilesystem implements Filesystem {
 
-	private ClassLoader loader;
+  private ClassLoader loader;
 
-	public ClasspathBasedFilesystem() {
-		loader = getClass().getClassLoader();
-	}
-	
-	
-	
-	@Override
-	public boolean isFile(String fileName) {
-		URL url = loader.getResource(fileName);
-		if (url == null)
-			return false;
-		
-		String[] strings = url.getPath().split("/");
-		String last = strings[strings.length-1];
-		
-		return last.contains(".") //TODO: not good -> there could be files without extension, but it should work for now
-				&& loader.getResourceAsStream(fileName) != null; 
-	}
+  public ClasspathBasedFilesystem() {
+    this.loader = getClass().getClassLoader();
+  }
 
-	@Override
-	public String readFile(String path) throws FileNotFoundException {
-		return new java.util.Scanner(loader.getResourceAsStream(path), "UTF-8")
-				.useDelimiter("\\Z")
-				.next()
-				.toString();
-	}
+  @Override
+  public boolean isFile(final String fileName) {
+    final URL url = this.loader.getResource(fileName);
+    if (url == null) {
+      return false;
+    }
 
-	@Override
-	public String getDirectory(String path) throws FileNotFoundException {
-		URL url = loader.getResource(path);
-		String[] strings = url.getPath().split("/");
-		String last = strings[strings.length-1];
-		if (last.contains(".")) //TODO: same here, files without extensions are a problem
-			return strings[strings.length-2];
-		return last;
-	}
+    final String[] strings = url.getPath().split("/");
+    final String last = strings[strings.length - 1];
 
-	@Override
-	public String getFilename(String path) throws FileNotFoundException {
-		URL url = loader.getResource(path);
-		String[] strings = url.getPath().split("/");
-		return strings[strings.length-1];
-	}
+    return last.contains(".") // TODO: not good -> there could be files without
+        // extension, but it should work for now
+        && this.loader.getResourceAsStream(fileName) != null;
+  }
 
-	@Override
-	public boolean exists(String fileName){
-		return loader.getResource(fileName) != null;
-	}
+  @Override
+  public String readFile(final String path) throws FileNotFoundException {
+    return new java.util.Scanner(this.loader.getResourceAsStream(path), "UTF-8").useDelimiter("\\Z").next().toString();
+  }
+
+  @Override
+  public String getDirectory(final String path) throws FileNotFoundException {
+    final URL url = this.loader.getResource(path);
+    final String[] strings = url.getPath().split("/");
+    final String last = strings[strings.length - 1];
+    if (last.contains(".")) {
+      // problem
+      return strings[strings.length - 2];
+    }
+    return last;
+  }
+
+  @Override
+  public String getFilename(final String path) throws FileNotFoundException {
+    final URL url = this.loader.getResource(path);
+    final String[] strings = url.getPath().split("/");
+    return strings[strings.length - 1];
+  }
+
+  @Override
+  public boolean exists(final String fileName) {
+    return this.loader.getResource(fileName) != null;
+  }
 }

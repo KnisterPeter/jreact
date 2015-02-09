@@ -22,58 +22,62 @@ public class JReact {
   private String componentCode;
 
   private boolean harmony = false;
-  
+
   private boolean sourceMaps = false;
 
   /**
    * This creates a {@link JReact} instance using the default
-   * {@link ScriptEngine} return for the mime-type 'application/javascript' and filebased resources.
+   * {@link ScriptEngine} return for the mime-type 'application/javascript' and
+   * filebased resources.
    */
   public JReact() {
-	  this(new ScriptEngineManager()
-      .getEngineByMimeType("application/javascript"));
+    this(new ScriptEngineManager().getEngineByMimeType("application/javascript"));
   }
-  
+
   /**
-   * This creates a {@link JReact} instance using classpath-resources instead of filebased resources.
+   * This creates a {@link JReact} instance using classpath-resources instead of
+   * filebased resources.
+   *
    * @param useClasspathResources
    */
-  public JReact(boolean useClasspathResources) {
-	  this(new ScriptEngineManager()
-      .getEngineByMimeType("application/javascript"), useClasspathResources);
+  public JReact(final boolean useClasspathResources) {
+    this(new ScriptEngineManager().getEngineByMimeType("application/javascript"), useClasspathResources);
   }
-  
+
   /**
-   * This creates a {@link JReact} instance using the given {@link ScriptEngine} and filebased resources.
-   * 
-   * @param js An instance of {@link ScriptEngine} to use
+   * This creates a {@link JReact} instance using the given {@link ScriptEngine}
+   * and filebased resources.
+   *
+   * @param js
+   *          An instance of {@link ScriptEngine} to use
    */
-  public JReact(ScriptEngine js) {
-	  this(js, false);
+  public JReact(final ScriptEngine js) {
+    this(js, false);
   }
-  
+
   /**
    * This creates a {@link JReact} instance using the given {@link ScriptEngine}
    * .
-   * 
-   * @param js An instance of {@link ScriptEngine} to use
-   * @param useClasspathResources use classpath resources instead of file-resources
+   *
+   * @param js
+   *          An instance of {@link ScriptEngine} to use
+   * @param useClasspathResources
+   *          use classpath resources instead of file-resources
    */
-  public JReact(ScriptEngine js, boolean useClasspathResources) {
+  public JReact(final ScriptEngine js, final boolean useClasspathResources) {
     this.js = js;
-    
-    if (useClasspathResources)
-    	js.put("filesystem", new ClasspathBasedFilesystem());
-    else
-    	js.put("filesystem", new FilebasedFilesystem());
-    
+
+    if (useClasspathResources) {
+      js.put("filesystem", new ClasspathBasedFilesystem());
+    } else {
+      js.put("filesystem", new FilebasedFilesystem());
+    }
+
     try {
-      this.js.eval(new InputStreamReader(getClass().getResourceAsStream(
-          "/require.js"), "UTF-8"));
+      this.js.eval(new InputStreamReader(getClass().getResourceAsStream("/require.js"), "UTF-8"));
+      this.js.eval("if (typeof process === 'undefined') { process = { env: {} }; }");
       this.js
-          .eval("if (typeof process === 'undefined') { process = { env: {} }; }");
-      this.js
-          .eval("if (typeof console === 'undefined') { console = { log: function(s) { print(s + '\\n'); }, warn: function(s) { print(s + '\\n'); } }; }");
+      .eval("if (typeof console === 'undefined') { console = { log: function(s) { print(s + '\\n'); }, warn: function(s) { print(s + '\\n'); } }; }");
     } catch (final UnsupportedEncodingException | ScriptException e) {
       throw new RuntimeException("Failed to setup JavaScriptEngine", e);
     }
@@ -81,21 +85,21 @@ public class JReact {
 
   /**
    * Enables JSX harmony rendering. False by default.
-   * 
+   *
    * @param harmony
    *          True to enable harmony
    */
-  public void setHarmony(boolean harmony) {
+  public void setHarmony(final boolean harmony) {
     this.harmony = harmony;
   }
-  
+
   /**
    * Enables JSX source-maps rendering. False by default.
-   * 
+   *
    * @param sourceMaps
    *          True to enable source-maps
    */
-  public void setSourceMaps(boolean sourceMaps) {
+  public void setSourceMaps(final boolean sourceMaps) {
     this.sourceMaps = sourceMaps;
   }
 
@@ -122,8 +126,8 @@ public class JReact {
    * @throws IOException
    *           Thrown if the json conversion of the props fails
    */
-  public String renderComponentToString(final String mainComponentPath,
-      final Map<String, Object> props) throws IOException {
+  public String renderComponentToString(final String mainComponentPath, final Map<String, Object> props)
+      throws IOException {
     return render(mainComponentPath, props, false);
   }
 
@@ -135,8 +139,8 @@ public class JReact {
    * @throws IOException
    *           Thrown if the json conversion of the props fails
    */
-  public String renderComponentToStaticMarkup(final String mainComponentPath,
-      final Map<String, Object> props) throws IOException {
+  public String renderComponentToStaticMarkup(final String mainComponentPath, final Map<String, Object> props)
+      throws IOException {
     return render(mainComponentPath, props, true);
   }
 
@@ -148,31 +152,29 @@ public class JReact {
    * @throws IOException
    *           Thrown if the json conversion of the props fails
    */
-  public String renderToString(final String mainComponentPath,
-      final Map<String, Object> props) throws IOException {
+  public String renderToString(final String mainComponentPath, final Map<String, Object> props) throws IOException {
     return render(mainComponentPath, props, false);
   }
 
-  private String render(final String mainComponentPath,
-      final Map<String, Object> props, boolean staticMarkup) throws IOException {
+  private String render(final String mainComponentPath, final Map<String, Object> props, final boolean staticMarkup)
+      throws IOException {
     try {
-      if (componentCode == null) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-            getClass().getResourceAsStream("/jreact.js"), "UTF-8"));
-        StringBuilder sb = new StringBuilder();
+      if (this.componentCode == null) {
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
+            "/jreact.js"), "UTF-8"));
+        final StringBuilder sb = new StringBuilder();
         String line = reader.readLine();
         while (line != null) {
           sb.append(line).append('\n');
           line = reader.readLine();
         }
-        componentCode = sb.toString()
-            .replace("@@staticMarkup@@", Boolean.toString(staticMarkup))
-            .replace("@@harmony@@", Boolean.toString(harmony))
-            .replace("@@sourceMaps@@", Boolean.toString(sourceMaps))
+        this.componentCode = sb.toString().replace("@@staticMarkup@@", Boolean.toString(staticMarkup))
+            .replace("@@harmony@@", Boolean.toString(this.harmony))
+            .replace("@@sourceMaps@@", Boolean.toString(this.sourceMaps))
             .replace("@@mainComponentPath@@", mainComponentPath)
             .replace("@@props@@", new ObjectMapper().writeValueAsString(props));
       }
-      return (String) this.js.eval(componentCode);
+      return (String) this.js.eval(this.componentCode);
     } catch (final ScriptException e) {
       throw new RuntimeException("Failed to execute render request", e);
     }
@@ -180,11 +182,11 @@ public class JReact {
 
   /**
    * Resets the {@link JReact} instance.
-   * 
+   *
    * Call this if you need to render different components.
    */
   public void reset() {
-    componentCode = null;
+    this.componentCode = null;
   }
 
 }
