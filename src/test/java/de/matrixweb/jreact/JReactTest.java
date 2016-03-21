@@ -25,6 +25,18 @@ public class JReactTest {
     return react;
   }
 
+  private JReact setupReact013() {
+    final JReact react = new JReact();
+    react.addRequirePath("./src/test/resources/react-0.13");
+    return react;
+  }
+
+  private JReact setupReact014() {
+    final JReact react = new JReact();
+    react.addRequirePath("./src/test/resources/react-0.14");
+    return react;
+  }
+
   @Test
   public void testRenderWithReact011() throws IOException {
     dynamicMarkup(setupReact011());
@@ -33,7 +45,6 @@ public class JReactTest {
   @Test
   public void testRenderStaticMarkupWithReact011() throws IOException {
     staticMarkup(setupReact011());
-
   }
 
   @Test
@@ -74,6 +85,26 @@ public class JReactTest {
     staticMarkup(setupReact012());
   }
 
+  @Test
+  public void testDynamicRenderWithReact013() throws IOException {
+    dynamicMarkup(setupReact013());
+  }
+
+  @Test
+  public void testStaticRenderWithReact013() throws IOException {
+    staticMarkup(setupReact013());
+  }
+
+  @Test
+  public void testDynamicRenderWithReact014() throws IOException {
+    dynamicMarkup(setupReact014());
+  }
+
+  @Test
+  public void testStaticRenderWithReact014() throws IOException {
+    staticMarkup(setupReact014());
+  }
+
   private void dynamicMarkup(final JReact react) throws IOException {
     final Map<String, Object> props = new HashMap<>();
     props.put("text", "Hello World!");
@@ -86,7 +117,7 @@ public class JReactTest {
   private void staticMarkup(final JReact react) throws IOException {
     final Map<String, Object> props = new HashMap<>();
     props.put("text", "Hello World!");
-    final String result = react.renderComponentToStaticMarkup("./test.js", props);
+    final String result = react.renderToStaticMarkup("./test.js", props);
 
     assertThat(result, is("<div>Hello World!</div>"));
   }

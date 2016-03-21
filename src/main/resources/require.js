@@ -15,25 +15,27 @@ function readFile(path) {
 }
 
 function loadFromNodeModules(base, id) {
-  var path = base + '/' + require.stack[0] + '/node_modules/' + id;
   var resolvedPath;
-  if (exists(path)) {
-	  if (isFile(path)) {
-	    resolvedPath = path;
-	  } else if (isFile(path + '/' + 'package.json')) {
-	    var pkg = readFile(path + '/' + 'package.json');
-	    eval( 'pkg = '+ pkg);
-	    if (pkg['main']) {
-	      resolvedPath = path + '/' + pkg['main'];
-	      if(isFile(resolvedPath + '.js')) {
-	          resolvedPath = resolvedPath + ".js";
-	      }
-	    }
-	  } else if (isFile(path + '/index.js')) {
-	    resolvedPath = path + '/index.js';
-	  }
-  } else if (isFile(path + '.js')) {
-      resolvedPath =  path + '.js';
+  for (var i = 0, n = require.stack.length; resolvedPath === undefined && i < n; i++) {
+    var path = base + '/' + require.stack[i] + '/node_modules/' + id;
+    if (exists(path)) {
+      if (isFile(path)) {
+        resolvedPath = path;
+      } else if (isFile(path + '/' + 'package.json')) {
+        var pkg = readFile(path + '/' + 'package.json');
+        eval( 'pkg = '+ pkg);
+        if (pkg['main']) {
+          resolvedPath = path + '/' + pkg['main'];
+          if(isFile(resolvedPath + '.js')) {
+              resolvedPath = resolvedPath + ".js";
+          }
+        }
+      } else if (isFile(path + '/index.js')) {
+        resolvedPath = path + '/index.js';
+      }
+    } else if (isFile(path + '.js')) {
+        resolvedPath =  path + '.js';
+    }
   }
   return resolvedPath;
 }

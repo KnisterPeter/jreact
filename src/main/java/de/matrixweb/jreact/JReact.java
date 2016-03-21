@@ -156,6 +156,18 @@ public class JReact {
     return render(mainComponentPath, props, false);
   }
 
+  /**
+   * @param mainComponentPath
+   * @param props
+   *          The props to render with
+   * @return Returns the render result as {@link String}
+   * @throws IOException
+   *           Thrown if the json conversion of the props fails
+   */
+  public String renderToStaticMarkup(final String mainComponentPath, final Map<String, Object> props) throws IOException {
+    return render(mainComponentPath, props, true);
+  }
+
   private String render(final String mainComponentPath, final Map<String, Object> props, final boolean staticMarkup)
       throws IOException {
     try {
