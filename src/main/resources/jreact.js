@@ -26,7 +26,7 @@ if (major === 0 && minor < 13) {
 } else if (major === 0 && minor === 13) {
   renderToString = React.renderToString;
   renderToStaticMarkup = React.renderToStaticMarkup;
-} else if (major === 0 && minor >= 14) {
+} else if (major === 0 && minor >= 14 || major >= 15) {
   ReactDOM = require('react-dom/server');
   renderToString = ReactDOM.renderToString;
   renderToStaticMarkup = ReactDOM.renderToStaticMarkup;

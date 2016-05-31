@@ -29,6 +29,8 @@ function loadFromNodeModules(base, id) {
           if(isFile(resolvedPath + '.js')) {
               resolvedPath = resolvedPath + ".js";
           }
+        } else {
+          resolvedPath = path + '/index.js';
         }
       } else if (isFile(path + '/index.js')) {
         resolvedPath = path + '/index.js';
