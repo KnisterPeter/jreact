@@ -23,3 +23,5 @@ props.put("text", "Hello World!");
 // The app.js will be required from the above configured require-paths
 String result = react.renderToString("./app.js", props);
 ```
+
+For further examples look here: https://github.com/KnisterPeter/jreact-examples
