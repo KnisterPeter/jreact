@@ -13,7 +13,7 @@ To do a render cycle call the #render method with the path to your entry point s
 Example
 =======
 
-```
+```java
 JReact react = new JReact();
 react.addRequirePath("./src");
 react.addRequirePath("./src/node_modules");
