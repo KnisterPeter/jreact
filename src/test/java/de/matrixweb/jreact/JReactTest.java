@@ -37,6 +37,12 @@ public class JReactTest {
     return react;
   }
 
+  private JReact setupReact015() {
+    final JReact react = new JReact();
+    react.addRequirePath("./src/test/resources/react-0.15");
+    return react;
+  }
+
   @Test
   public void testRenderWithReact011() throws IOException {
     dynamicMarkup(setupReact011());
@@ -105,12 +111,31 @@ public class JReactTest {
     staticMarkup(setupReact014());
   }
 
+  @Test
+  public void testDynamicRenderWithReact015() throws IOException {
+    dynamicMarkup15(setupReact015());
+  }
+
+  @Test
+  public void testStaticRenderWithReact015() throws IOException {
+    staticMarkup(setupReact015());
+  }
+
   private void dynamicMarkup(final JReact react) throws IOException {
     final Map<String, Object> props = new HashMap<>();
     props.put("text", "Hello World!");
     final String result = react.renderToString("./test.js", props);
 
     assertThat(result, startsWith("<div data-reactid=\""));
+    assertThat(result, endsWith("\">Hello World!</div>"));
+  }
+
+  private void dynamicMarkup15(final JReact react) throws IOException {
+    final Map<String, Object> props = new HashMap<>();
+    props.put("text", "Hello World!");
+    final String result = react.renderToString("./test.js", props);
+
+    assertThat(result, startsWith("<div data-reactroot=\""));
     assertThat(result, endsWith("\">Hello World!</div>"));
   }
 
